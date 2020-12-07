@@ -2,6 +2,7 @@ package com.company;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
+import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.util.ArrayList;
 
@@ -11,41 +12,37 @@ public class UserInstance {
     private static DataInputStream in;
     private static DataOutputStream out;
 
-    // Establish socket
+    // Establish socket and enter control center
     public UserInstance(Socket socket) throws Exception{
         thisSocket = socket;
-        ValidateLoginController();
+        UserControlCenter();
     }
 
-    // Controls login state
-    private static void ValidateLoginController() throws Exception{
-        int opt;
-        opt = ValidateLogin();
-        switch (opt) {
-            case(0):
-                System.out.println(" - - - Success");
-                ActionCenter();
+    // Universal controller for User -> Server interactions
+    private static void UserControlCenter() throws Exception{
+        in = new DataInputStream(thisSocket.getInputStream());
+        String clientCall = in.readUTF();
+
+        switch (clientCall) {
+            case("LOGIN"):
+                ValidateLogin();
                 break;
-            case(1):
-                System.out.println(" - - - Failed");
-                ValidateLoginController();
+            case("VIEW_ALL_USERS"):
+                ReturnUsers();
                 break;
-            case(2):
-                System.out.println(" - - - Closing Connection");
-                thisSocket.close();
+            case("VIEW_ALL_BOOKS"):
+                ReturnBooks();
                 break;
         }
     }
 
-    // Compare login info with Database info
-    private static int ValidateLogin() throws Exception {
+    // Compare login info with Database info; respond to client
+    private static void ValidateLogin() throws Exception {
         in = new DataInputStream(thisSocket.getInputStream());
         out = new DataOutputStream(thisSocket.getOutputStream());
-        System.out.println(" - - Client Attempting Login");
         String checkType, checkName, checkPass;
         String typeinput, nameInput, passInput;
         boolean valid = false;
-        int opt = 1;
 
         DatabaseHandler dbHandler = new DatabaseHandler();
         ArrayList<User> userList = dbHandler.ObtainAllUsersData();
@@ -60,19 +57,28 @@ public class UserInstance {
             checkPass = user.getPassword();
             if (checkType.equals(typeinput) && checkName.equals(nameInput) && checkPass.equals(passInput)) {
                 valid = true;
-                opt = 0;
             }
         }
-        if (typeinput.equals("q")) { opt = 2; }
         out.writeBoolean(valid);
-        return opt;
+        UserControlCenter();
     }
 
-    // Main action controller
-    public static void ActionCenter() throws Exception{
-        in = new DataInputStream(thisSocket.getInputStream());
-        System.out.println(" - - - Client Reached ActionCenter");
-        System.out.println(" - - - - Closing Connection");
-
+    // Collect all user data; return to client as Array List
+    private static void ReturnUsers() throws Exception {
+        ObjectOutputStream objectOutputStream = new ObjectOutputStream(thisSocket.getOutputStream());
+        DatabaseHandler dbHandler = new DatabaseHandler();
+        ArrayList<User> userArrayList = dbHandler.ObtainAllUsersData();
+        objectOutputStream.writeObject(userArrayList);
+        UserControlCenter();
     }
+
+    // Collect all book data; return to client as Array List
+    public static void ReturnBooks() throws Exception {
+        ObjectOutputStream objectOutputStream = new ObjectOutputStream(thisSocket.getOutputStream());
+        DatabaseHandler dbHandler = new DatabaseHandler();
+        ArrayList<Book> bookArrayList = dbHandler.ObtainAllBookData();
+        objectOutputStream.writeObject(bookArrayList);
+        UserControlCenter();
+    }
+
 }
