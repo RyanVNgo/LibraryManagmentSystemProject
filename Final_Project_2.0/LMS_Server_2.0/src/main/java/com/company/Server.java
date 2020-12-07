@@ -25,10 +25,12 @@ public class Server {
         }
     }
 
-    // Passes a client as a new UserInstance through a thread
+    // Passes a client as a new UserInstance (with an ID) through a thread
     private static class userThread extends Thread {
         Socket socket;
-        public userThread (Socket socket) { this.socket = socket; }
+        public userThread (Socket socket) {
+            this.socket = socket;
+        }
         public void run() {
             try {
                 System.out.println(" - User Instance Created");

@@ -6,6 +6,7 @@ import java.util.ArrayList;
 public class DatabaseHandler {
 
     ArrayList<User> userArrayList = new ArrayList<User>();
+    ArrayList<Book> bookArrayList = new ArrayList<Book>();
 
     public void ClearArray() {
         userArrayList.clear();
@@ -26,7 +27,7 @@ public class DatabaseHandler {
     // Obtains all User data from DB, creates User objects, stores objects in userArrayList
     // Returns userArrayList to method that made call
     public ArrayList<User> ObtainAllUsersData() {
-        String sql = "SELECT usertype, username, password FROM UserLoginData";
+        String sql = "SELECT userType, username, password FROM UserLoginData";
         String userType, username, password;
         try {
             Connection conn = this.connect();
@@ -43,6 +44,27 @@ public class DatabaseHandler {
             System.out.println(e.getMessage());
         }
         return userArrayList;
+    }
+
+    public ArrayList<Book> ObtainAllBookData() {
+        String sql = "Select BookID, BookTitle, Author, Genre FROM BookData";
+        String bookId, bookTitle, author, genre;
+        try {
+            Connection conn = this.connect();
+            Statement stmt = conn.createStatement();
+            ResultSet rs = stmt.executeQuery(sql);
+            while(rs.next()) {
+                bookId = rs.getString("BookID");
+                bookTitle = rs.getString("BookTitle");
+                author = rs.getString("Author");
+                genre = rs.getString("Genre");
+                Book tempBook = new Book(bookId, bookTitle, author, genre);
+                bookArrayList.add(tempBook);
+            }
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+        return bookArrayList;
     }
 
 }
