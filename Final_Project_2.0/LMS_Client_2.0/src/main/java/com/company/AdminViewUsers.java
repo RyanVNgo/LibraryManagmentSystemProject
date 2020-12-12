@@ -45,6 +45,7 @@ public class AdminViewUsers extends JFrame {
         add(userDataTable, layoutConst);
     }
 
+    // Admin View Users window main method to call
     public static void AdminViewUsersMain() throws Exception {
         userArrayList = ClientMain.ViewAllUsers();
         AdminViewUsers adminViewUsersFrame = new AdminViewUsers();

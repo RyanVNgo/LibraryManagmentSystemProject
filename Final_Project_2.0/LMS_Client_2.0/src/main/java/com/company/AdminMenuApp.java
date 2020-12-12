@@ -51,9 +51,19 @@ public class AdminMenuApp extends JFrame implements ActionListener {
         JButton sourceEvent = (JButton) e.getSource();
 
         if (sourceEvent == addUserButton) {
-
+            try {
+                AdminAddUser.AdminAddUserMain();
+                this.dispose();
+            } catch (Exception exception) {
+                exception.printStackTrace();
+            }
         } else if (sourceEvent == removeUserButton) {
-
+            try {
+                AdminRemoveUser.AdminRemoveUserMain();
+                this.dispose();
+            } catch (Exception exception) {
+                exception.printStackTrace();
+            }
         } else if (sourceEvent == viewUserButton){
             try {
                 AdminViewUsers.AdminViewUsersMain();
@@ -64,7 +74,6 @@ public class AdminMenuApp extends JFrame implements ActionListener {
             LoginApp.LoginAppMain();
             this.dispose();
         }
-
     }
 
     // Admin Menu Window main method to call

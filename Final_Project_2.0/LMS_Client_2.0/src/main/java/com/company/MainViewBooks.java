@@ -3,11 +3,9 @@ package com.company;
 import javax.swing.*;
 import javax.swing.table.TableColumnModel;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
-public class MainViewBooks extends JFrame implements ActionListener {
+public class MainViewBooks extends JFrame {
 
     private static ArrayList<Book> bookArrayList;
 
@@ -53,11 +51,6 @@ public class MainViewBooks extends JFrame implements ActionListener {
         layoutConst.gridy = 2;
         layoutConst.insets = new Insets(0,10,10,10);
         add(userDataTable, layoutConst);
-
-    }
-
-    @Override
-    public void actionPerformed(ActionEvent e) {
 
     }
 

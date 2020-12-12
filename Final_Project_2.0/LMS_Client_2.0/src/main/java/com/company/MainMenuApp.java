@@ -54,9 +54,19 @@ public class MainMenuApp extends JFrame implements ActionListener {
         JButton sourceEvent = (JButton) e.getSource();
 
         if (sourceEvent == addBookButton) {
-
+            try {
+                MainAddBook.MainAddBookMain();
+                this.dispose();
+            } catch (Exception exception) {
+                exception.printStackTrace();
+            }
         } else if (sourceEvent == removeBookButton) {
-
+            try {
+                MainRemoveBook.MainRemoveBookMain();
+                this.dispose();
+            } catch (Exception exception) {
+                exception.printStackTrace();
+            }
         } else if (sourceEvent == viewBooksButton) {
             try {
                 MainViewBooks.MainViewBooksMain();

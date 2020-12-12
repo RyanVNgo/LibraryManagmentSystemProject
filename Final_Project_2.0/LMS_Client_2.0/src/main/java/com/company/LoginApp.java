@@ -4,16 +4,18 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.WindowAdapter;
 
 public class LoginApp extends JFrame implements ActionListener {
 
     private JTextField userTypeField;
     private JTextField usernameField;
     private JTextField passwordField;
+    private JButton loginButton;
+    private JButton exitButton;
 
     // Login window GUI
     LoginApp() {
+
         GridBagConstraints layoutConst = new GridBagConstraints();
         setTitle("Login");
 
@@ -28,8 +30,10 @@ public class LoginApp extends JFrame implements ActionListener {
         passwordField = new JTextField(16);
         passwordField.setEditable(true);
 
-        JButton loginButton = new JButton("Login");
+        loginButton = new JButton("Login");
         loginButton.addActionListener(this);
+        exitButton = new JButton("Exit");
+        exitButton.addActionListener(this);
 
         setLayout(new GridBagLayout());
         layoutConst.insets = new Insets(10,10,10,10);
@@ -60,30 +64,47 @@ public class LoginApp extends JFrame implements ActionListener {
 
         layoutConst.gridx = 0;
         layoutConst.gridy = 3;
+        add(exitButton, layoutConst);
+
+        layoutConst.gridx = 1;
+        layoutConst.gridy = 3;
         add(loginButton, layoutConst);
+
     }
 
     // Button Action
     @Override
     public void actionPerformed(ActionEvent e) {
-        String userTypeInput = userTypeField.getText();
-        String usernameInput = usernameField.getText();
-        String passwordInput = passwordField.getText();
-        try {
-            int opt = ClientMain.Login(userTypeInput, usernameInput, passwordInput);
-            if (opt == 0) {
-                if (userTypeInput.equals("ADMIN")) {
-                    AdminMenuApp.AdminMenuAppMain();
+        JButton sourceEvent = (JButton) e.getSource();
+
+        if (sourceEvent == loginButton) {
+            String userTypeInput = userTypeField.getText();
+            String usernameInput = usernameField.getText();
+            String passwordInput = passwordField.getText();
+            try {
+                int opt = ClientMain.Login(userTypeInput, usernameInput, passwordInput);
+                if (opt == 0) {
+                    if (userTypeInput.equals("ADMIN")) {
+                        AdminMenuApp.AdminMenuAppMain();
+                    } else {
+                        MainMenuApp.MenuAppMain();
+                    }
+                    this.dispose();
                 } else {
-                    MainMenuApp.MenuAppMain();
+                    JOptionPane.showMessageDialog(null, "Invalid Login");
                 }
-                this.dispose();
-            } else {
-                JOptionPane.showMessageDialog(null, "Invalid Login");
+            } catch (Exception exception) {
+                exception.printStackTrace();
             }
-        } catch (Exception exception) {
-            exception.printStackTrace();
+        } else {
+            try {
+                ClientMain.Disconnect();
+            } catch (Exception exception) {
+                exception.printStackTrace();
+            }
+            System.exit(0);
         }
+
     }
 
     // Login window main method to call

@@ -52,4 +52,44 @@ public class ClientMain {
         return (ArrayList<Book>) objectInputStream.readObject();
     }
 
+    // Add user request to server with data input
+    public static void AddNewUser(String userType, String username, String password) throws Exception {
+        out = new DataOutputStream(socket.getOutputStream());
+        out.writeUTF("ADD_NEW_USER");
+        out.writeUTF(userType);
+        out.writeUTF(username);
+        out.writeUTF(password);
+    }
+
+    // Remove user request to server with data input
+    public static void RemoveUser(String username) throws Exception{
+        out = new DataOutputStream(socket.getOutputStream());
+        out.writeUTF("REMOVE_USER");
+        out.writeUTF(username);
+    }
+
+    // Add book request to server with data input
+    public static void AddNewBook(String bookId, String bookTitle, String author, String genre) throws Exception{
+        out = new DataOutputStream(socket.getOutputStream());
+        out.writeUTF("ADD_NEW_BOOK");
+        out.writeUTF(bookId);
+        out.writeUTF(bookTitle);
+        out.writeUTF(author);
+        out.writeUTF(genre);
+    }
+
+    // Remove book request to server with data input
+    public static void RemoveBook(String bookId) throws Exception {
+        out = new DataOutputStream(socket.getOutputStream());
+        out.writeUTF("REMOVE_BOOK");
+        out.writeUTF(bookId);
+    }
+
+    // Disconnect client from server
+    public static void Disconnect() throws Exception{
+        out = new DataOutputStream(socket.getOutputStream());
+        out.writeUTF("CLIENT_DISCONNECT");
+    }
+
+
 }
