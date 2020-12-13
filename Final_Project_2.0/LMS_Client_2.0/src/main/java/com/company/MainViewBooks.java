@@ -56,10 +56,30 @@ public class MainViewBooks extends JFrame {
 
     public static void MainViewBooksMain() throws Exception{
         bookArrayList = ClientMain.ViewAllBooks();
+        SortArrayById();
+
         MainViewBooks mainViewBooksFrame = new MainViewBooks();
         mainViewBooksFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         mainViewBooksFrame.pack();
         mainViewBooksFrame.setVisible(true);
+    }
+
+    // Sort array of books by ID
+    private static void SortArrayById() {
+        int arrLength = bookArrayList.size();
+
+        for (int i = 0; i < arrLength-1; i++) {
+            for (int j = 0; j < arrLength-i-1; j++) {
+                int lowerJ = Integer.parseInt(bookArrayList.get(j).getBookID());
+                int higherJ = Integer.parseInt(bookArrayList.get(j+1).getBookID());
+
+                if (lowerJ > higherJ) {
+                    Book tempBook = bookArrayList.get(j);
+                    bookArrayList.set(j, bookArrayList.get(j + 1));
+                    bookArrayList.set(j + 1, tempBook);
+                }
+            }
+        }
     }
 
 }

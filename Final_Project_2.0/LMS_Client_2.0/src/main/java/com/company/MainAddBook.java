@@ -80,27 +80,37 @@ public class MainAddBook extends JFrame implements ActionListener {
         JButton sourceEvent = (JButton) e.getSource();
 
         if (sourceEvent == addBookButton) {
-            int bookId = 0;
-            String bookIdFinal;
+            int bookIdArrayLength = bookArrayList.size();
+            int[] bookIdArray = new int[bookIdArrayLength];
+
+            int IntBookIdFinal;
+            String StringBookIdFinal;
+
             String bookTitleInput = bookTitleField.getText();
             String authorInput = authorField.getText();
             String genreInput = genreField.getText();
 
-            // Set new book's ID to highest current ID + 1
-            for (Book book : bookArrayList) {
-                String tempBookIdString = book.getBookID();
-                int bookIdCompare = Integer.parseInt(tempBookIdString);
-                if (bookIdCompare > bookId) {
-                    bookId = bookIdCompare;
-                }
+            // add all book ID's to an array
+            for (int i = 0; i < bookIdArray.length; i++) {
+                int tempBookId = Integer.parseInt(bookArrayList.get(i).getBookID());
+                bookIdArray[i] = tempBookId;
             }
-            bookIdFinal = Integer.toString(bookId + 1);
+
+            // call method to sort array of ID's from least to greatest
+            bookIdArray = SortBookIdArray(bookIdArray);
+
+            // call method to find lowest available book ID
+            IntBookIdFinal = LowestBookId(bookIdArray);
+
+            // parse IntBookIdFinal into a string
+            StringBookIdFinal = Integer.toString(IntBookIdFinal);
 
             try {
-                ClientMain.AddNewBook(bookIdFinal, bookTitleInput, authorInput, genreInput);
+                ClientMain.AddNewBook(StringBookIdFinal, bookTitleInput, authorInput, genreInput);
             } catch (Exception exception) {
                 exception.printStackTrace();
             }
+
             MainMenuApp.MenuAppMain();
             this.dispose();
             JOptionPane.showMessageDialog(null, "Book Successfully Added");
@@ -117,6 +127,41 @@ public class MainAddBook extends JFrame implements ActionListener {
         mainAddBookFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         mainAddBookFrame.pack();
         mainAddBookFrame.setVisible(true);
+    }
+
+    // sorts book ID array from least to greatest
+    private static int[] SortBookIdArray(int[] arrayInput) {
+        for (int i = 1; i < arrayInput.length; i++) {
+            int key = arrayInput[i];
+            int j = i -1;
+
+            while (j >= 0 && arrayInput[j] > key) {
+                arrayInput[j + 1] = arrayInput[j];
+                j = j - 1;
+
+            }
+            arrayInput[j + 1] = key;
+        }
+        return arrayInput;
+    }
+
+    // finds lowest available book ID
+    private static int LowestBookId(int[] arrayInput) {
+        int finalBookId = 0;
+
+        // attempts to set final book ID to lowest available ID
+        for (int i = 0; i < arrayInput.length; i++) {
+            if (arrayInput[i] != i + 1) {
+                finalBookId = i;
+            }
+        }
+
+        // sets final book ID to highest ID plus 1 if there is no available lower one
+        if (finalBookId == 0) {
+            finalBookId = arrayInput.length + 1;
+        }
+
+        return finalBookId;
     }
 
 }
