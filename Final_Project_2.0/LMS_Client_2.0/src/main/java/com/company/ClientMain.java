@@ -3,6 +3,7 @@ package com.company;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.ObjectInputStream;
+import java.net.InetAddress;
 import java.net.Socket;
 import java.util.ArrayList;
 
@@ -14,8 +15,10 @@ public class ClientMain {
     // Establish socket, start Login progress
     public static void main(String[] args) throws Exception{
         int port = 7111;
-        String host = "localhost";
-        socket = new Socket(host, port);
+        //String host = "localhost";
+
+        InetAddress host = InetAddress.getLocalHost();
+        socket = new Socket(host.getHostName(), port);
 
         LoginApp.LoginAppMain();
     }
