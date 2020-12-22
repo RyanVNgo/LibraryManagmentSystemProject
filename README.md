@@ -16,10 +16,10 @@ Press login
 
 All files in this repository have been developed by RyanVNgo.
 
-##Prerequisites  
+## Prerequisites  
 Java 8+  
 Maven  
 
-##How to build and run  
+## How to build and run  
 mvn clean install  
 java -jar target/TicTacToe-1.0.0.jar  
